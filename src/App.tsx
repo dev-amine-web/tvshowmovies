@@ -1,25 +1,40 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+
+import HomePage from './pages/HomePage';
+const queryClient = new QueryClient();
+
+
+const router = createBrowserRouter([{
+  path:'/',
+  element: <HomePage/>,
+  children: [
+    {
+      path: ':type',
+      element: <HomePage />,
+      children: [
+        {
+          path: ':search',
+          element: <HomePage />
+        }
+      ]
+    }
+  ]
+}
+
+]);
 
 function App() {
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <React.StrictMode>
+    <QueryClientProvider client={queryClient}>
+      <RouterProvider router={router} />
+      <ReactQueryDevtools initialIsOpen={false} />
+    </QueryClientProvider>
+  </React.StrictMode>
   );
 }
 
